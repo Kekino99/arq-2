@@ -7,6 +7,8 @@
 \usepackage{float}
 \usetikzlibrary{positioning,fit,calc,arrows.meta, shapes}
 \usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{mathtools}
 \graphicspath{ {images/} }
 
 %Tot això hauria d'anar en un pkg, però no sé com és fa
@@ -78,13 +80,33 @@
 \newpage
 \pagenumbering{arabic}
 \section{Introducció}
-
+Per veure el funcionament del procesament segmentat es va fer un programa que realitzes una petita formula matemàtica composada pel sumatori de un seguit de divisions d'exponents. El programa es va realitzar fora de classe de dues formes, una forma bàscia i una segona forma apta per aplicar la millora Delay Slot al executar-lo.\\
+Amb els programes creats i verificats, en el laboratori es va realitzar la execució d'aquests amb el software winmips64, que ens deixava executar-lo amb el procesament segmentat amb i sense un parell de opcions de millora:
+\begin{itemize}
+\item[--]{Delay slot:} Permet que algunes instruccions s'executin sense els efectes de les instruccions anteriors. Això passa, per exemple, en una instrucció senzilla col·locada després d'una instrucció de salt.
+\item[--]{Forwarding:} És una opció que optimitza l'execució del programa reduïnt els riscos que pot provocar el pipelining.
+\end{itemize}
+Els resultats deles execucións es troben en la Taula \ref{tab:results} de l'Annex.
 \section{Anàlisi de resultats}
-
-\subsection{Programa}
-
 \subsection{Opcions de millora}
+L'execució del programa és podia realitzar variant les opcions de millora que ens proposava el winmips64. Aquestes eren Delay slot i Forwarding. Aleshores com es demanava a la pràctica, varem executar el programa sense opcions de millora, amb només una de les dues (en els dos casos) i amb les dues alhora, com es pot veure a la Taula \ref{tab:results}.\\
+Si comparem les columnes de la taula ràpidament podem veure que les columnes amb menys cicles són les quals tenen activat el Forwarding. Aquestes dues columnes tenen el mateix CPI, i en l'unic que es diferencien és en els RAW stalls, i això deu ser consequència del Delay slot activat en la 4a columna.\\
+Els càlculs del Speedup respecte l'execució sequencial per cada cas estudiat són les següents:
+\begin{itemize}
+\item[--]{Equació general}
+$$ acceleracio = \frac{CPI\ ideal * profunditat\ de\ segmentacio}{CPI\ ideal + cicles\ de\ detencio} $$
+\item[--]{Sense opcions de millora}
+$$ acceleracio = \frac{1 * 5}{1 + \frac{144+15\ detencions}{196\ cicles}}=2.76 $$
+\item[--]{Forwarding}
+$$ acceleracio = \frac{1 * 5}{1 + \frac{145\ detencions}{139\ cicles}}=2.44 $$
+\item[--]{Delay slot}
+$$ acceleracio = \frac{1 * 5}{1 + \frac{111\ detencions}{152\ cicles}}=2.89 $$
+\item[--]{Delay slot + forwarding}
+$$ acceleracio = \frac{1 * 5}{1 + \frac{120\ detencions}{139\ cicles}}=2.68 $$
+\end{itemize}
 
+
+ 
 
 \section{Conclusió}
 
